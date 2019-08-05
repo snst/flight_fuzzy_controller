@@ -68,6 +68,7 @@ class MultiWii:
         self.temp2 = ();
         self.elapsed = 0
         self.sonar_altitude = 0
+        self.gps = {'state':0, 'numSat':0, 'lat':0, 'lon':0, 'alt':0, 'speed':0, 'course':0}
         self.PRINT = 1
 
     """Class initialization"""
@@ -308,10 +309,15 @@ class MultiWii:
         elapsed = time.time() - start
         cmd = code[0]
 
-        if cmd == MultiWii.MSP_SONAR_ALTITUDE:
+        if cmd == MultiWii.RAW_GPS:
+            temp = struct.unpack('<cciihhh',data)
+            self.gps['lat']=temp[2] / 10000000.0
+            self.gps['lon']=temp[3] / 10000000.0
+            return self.gps
+        elif cmd == MultiWii.MSP_SONAR_ALTITUDE:
             self.sonar_altitude=temp[0]
             return self.sonar_altitude
-        if cmd == MultiWii.ATTITUDE:
+        elif cmd == MultiWii.ATTITUDE:
             self.attitude['angx']=float(temp[0]/10.0)
             self.attitude['angy']=float(temp[1]/10.0)
             self.attitude['heading']=float(temp[2])

@@ -1,1 +1,2 @@
-python3 ./controller/altitude/altitude-controller.py
+cd "$PWD/$(dirname $0)/controller/altitude/"
+python3 ./altitude-controller.py
